@@ -1,0 +1,7 @@
+{
+  "name": "GameBusLibre",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
