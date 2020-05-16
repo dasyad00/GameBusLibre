@@ -1,3 +1,5 @@
+import { Storage } from '@ionic/storage';
+import { Router } from '@angular/router';
 import { Component } from '@angular/core';
 import { DataService, Message } from '../services/data.service';
 
@@ -7,7 +9,12 @@ import { DataService, Message } from '../services/data.service';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
-  constructor(private data: DataService) {}
+  constructor(
+    private storage: Storage,
+    private router: Router,
+    private data: DataService,
+  ) {
+  }
 
   refresh(ev) {
     setTimeout(() => {
@@ -17,6 +24,17 @@ export class HomePage {
 
   getMessages(): Message[] {
     return this.data.getMessages();
+  }
+
+  getCsv() {
+    console.log('getting csv')
+    this.router.navigateByUrl('/download-csv')
+  }
+  
+  logOut() {
+    this.storage.remove('id')
+    this.storage.remove('token')
+    this.router.navigateByUrl('/login')
   }
 
 }

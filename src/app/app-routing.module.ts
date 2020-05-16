@@ -1,19 +1,27 @@
+import { AuthGuardService } from './services/auth-guard.service';
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
     path: 'home',
+    canActivate: [ AuthGuardService ],
     loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
   },
   {
-    path: 'message/:id',
-    loadChildren: () => import('./view-message/view-message.module').then( m => m.ViewMessagePageModule)
-  },
-  {
     path: '',
+    canActivate: [ AuthGuardService ],
     redirectTo: 'home',
     pathMatch: 'full'
+  },
+  {
+    path: 'login',
+    loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule)
+  },
+  {
+    path: 'download-csv',
+    canActivate: [ AuthGuardService ],
+    loadChildren: () => import('./download-csv/download-csv.module').then( m => m.DownloadCsvPageModule)
   },
 ];
 

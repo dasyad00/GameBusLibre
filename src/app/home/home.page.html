@@ -14,12 +14,15 @@
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">
-        Inbox
+        Home
       </ion-title>
     </ion-toolbar>
   </ion-header>
   
-  <ion-list>
+  <ion-button (click)="getCsv()">Upload csv</ion-button>
+  <ion-button (click)="logOut()">Log out</ion-button>
+  <!-- <iframe height="100%" width="100%" src="https://www.libreview.com/glucosereports">hi</iframe> -->
+  <!-- <ion-list>
     <app-message *ngFor="let message of getMessages()" [message]="message"></app-message>
-  </ion-list>
+  </ion-list> -->
 </ion-content>
