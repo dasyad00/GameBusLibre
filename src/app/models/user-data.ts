@@ -1,6 +1,8 @@
 export class UserData {
   private access_token: string;
   private user: {
+    firstName: string,
+    lastName: string,
     player: {
       id: number;
     };
@@ -12,5 +14,9 @@ export class UserData {
 
   public get id() {
     return this.user.player.id
+  }
+
+  public get name() {
+    return this.user.firstName + this.user.lastName
   }
 }

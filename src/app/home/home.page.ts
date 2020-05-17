@@ -9,11 +9,15 @@ import { DataService, Message } from '../services/data.service';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
+  name: string;
   constructor(
     private storage: Storage,
     private router: Router,
     private data: DataService,
   ) {
+    this.storage.get('name').then(name => {
+      this.name = name;
+    });
   }
 
   refresh(ev) {
@@ -34,6 +38,7 @@ export class HomePage {
   logOut() {
     this.storage.remove('id')
     this.storage.remove('token')
+    this.storage.remove('name')
     this.router.navigateByUrl('/login')
   }
 

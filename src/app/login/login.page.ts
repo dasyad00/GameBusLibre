@@ -28,6 +28,7 @@ export class LoginPage implements OnInit {
             await Promise.all([
                 this.storage.set('token', user.token),
                 this.storage.set('id', user.id),
+                this.storage.set('name', user.name)
             ]);
 
             let msg = 'Login successful!';

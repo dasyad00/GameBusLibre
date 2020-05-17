@@ -1,3 +1,4 @@
+import { Storage } from '@ionic/storage';
 import { Activity, Glucose } from './../gamebus-data/gamebus-data.enum';
 import { Router } from '@angular/router';
 import { Component, OnInit, Input } from '@angular/core';
@@ -42,6 +43,7 @@ export class DownloadCsvPage implements OnInit {
 
     onLibreViewLoad() {
         console.log('i am loaded');
+        document.getElementById('libreview-frame')
     }
 
     async onUpload(event: Event) {
