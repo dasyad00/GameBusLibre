@@ -18,8 +18,8 @@ export class LoginPage implements OnInit {
         private gamebus: GamebusService
     ) {}
 
-    protected email: string;
-    protected password: string;
+    email: string;
+    password: string;
 
     async onLogin() {
         try {

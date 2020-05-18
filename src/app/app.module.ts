@@ -10,10 +10,9 @@ import { IonicStorageModule } from '@ionic/storage';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
-import { ReadingComponent } from './reading/reading.component';
 
 @NgModule({
-  declarations: [AppComponent, ReadingComponent],
+  declarations: [AppComponent],
   entryComponents: [],
   imports: [
     BrowserModule,
