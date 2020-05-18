@@ -16,13 +16,13 @@ export class GamebusService {
         private storage: Storage
     ) {}
 
-    private urlLogin = environment.gamebus + 'v2/oauth/token';
+    private urlLogin = environment.gamebusApi + 'v2/oauth/token';
     private urlPostActivity =
-        environment.gamebus +
+        environment.gamebusApi +
         'v2/activities?dryrun=false&fields=personalPoints.value';
     private async urlGetActivity(): Promise<string> {
         return (
-            environment.gamebus +
+            environment.gamebusApi +
             'v2/players/' +
             (await this.storage.get('id')) +
             '/activities'

@@ -17,6 +17,6 @@ export class UserData {
   }
 
   public get name() {
-    return this.user.firstName + this.user.lastName
+    return this.user.firstName + ' ' + this.user.lastName
   }
 }

@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  gamebus: 'https://api3.gamebus.eu/'
+  gamebusApi: 'https://api3.gamebus.eu/',
+  gamebus: 'https://app3.gamebus.eu/'
 };
 
 /*

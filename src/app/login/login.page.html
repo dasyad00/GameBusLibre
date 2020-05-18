@@ -1,14 +1,13 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>login</ion-title>
+    <ion-title>Login</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
-  <ion-input placeholder="e-mail" [(ngModel)] = "email"></ion-input>
-  <ion-input placeholder="password" type="password" [(ngModel)] = "password"></ion-input>
-  <ion-button (click)="onClick()">
-  Login
-</ion-button>
+  <ion-input placeholder="e-mail" [(ngModel)] = "email" (keyup.enter)="onLogin()"></ion-input>
+  <ion-input placeholder="password" type="password" [(ngModel)] = "password" (keyup.enter)="onLogin()"></ion-input>
+  <ion-button (click)="onLogin()">Login</ion-button>
+  <ion-button (click)="onRegister()">Register</ion-button>
 
 </ion-content>

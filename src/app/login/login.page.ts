@@ -1,10 +1,9 @@
-import { Message } from './../services/data.service';
+import { environment } from 'src/environments/environment';
 import { GamebusService } from './../services/gamebus-service.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
-import { catchError } from 'rxjs/operators';
 
 @Component({
     selector: 'app-login',
@@ -22,7 +21,7 @@ export class LoginPage implements OnInit {
     protected email: string;
     protected password: string;
 
-    async onClick() {
+    async onLogin() {
         try {
             let user = await this.gamebus.login(this.email, this.password);
             await Promise.all([
@@ -41,6 +40,10 @@ export class LoginPage implements OnInit {
             console.log(msg);
             this.presentToast(msg);
         }
+    }
+
+    onRegister() {
+        window.open(environment.gamebus, '_blank')
     }
 
     async presentToast(message) {

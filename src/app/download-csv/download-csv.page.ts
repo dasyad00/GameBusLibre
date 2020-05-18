@@ -1,9 +1,7 @@
-import { Storage } from '@ionic/storage';
 import { Activity, Glucose } from './../gamebus-data/gamebus-data.enum';
-import { Router } from '@angular/router';
 import { Component, OnInit, Input } from '@angular/core';
 import { GamebusService } from '../services/gamebus-service.service';
-import { ActivityObject } from '../models/activityobject';
+import { ToastController } from '@ionic/angular';
 
 enum columns {
     'Device',
@@ -34,20 +32,32 @@ enum columns {
 })
 export class DownloadCsvPage implements OnInit {
     constructor(
-        private router: Router,
-        private storage: Storage,
+        private toastController: ToastController,
         private gamebus: GamebusService
     ) {}
+
+    showTutorial = false;
+    showLibreView = false;
 
     ngOnInit() {}
 
     onLibreViewLoad() {
-        console.log('i am loaded');
-        document.getElementById('libreview-frame')
+        document.getElementById('libreview-frame');
+    }
+
+    toggleTutorial() {
+        this.showTutorial = !this.showTutorial;
+    }
+
+    openLibreView() {
+        window.open('https://www.libreview.com/glucosereports', '_blank');
+    }
+
+    toggleLibreView() {
+        this.showLibreView = !this.showLibreView;
     }
 
     async onUpload(event: Event) {
-        console.log(event);
         const file = (event.target as HTMLInputElement).files[0];
         const data = (await file.text())
             .split('\n') // Split each row
@@ -60,54 +70,39 @@ export class DownloadCsvPage implements OnInit {
                 };
             });
 
-        let list = await this.gamebus.getActivityList();
-        let latestGlucoseActivity = list.filter((value) => {
+        const list = await this.gamebus.getActivityList();
+        const latestGlucoseActivity = list.filter((value) => {
             return value.gameDescriptor.id === Activity.GLUCOSE;
         })[0];
-        console.log('activity-date:' + latestGlucoseActivity.date);
 
-        console.log(latestGlucoseActivity);
         const newData = data.filter((activity) => {
-            return (
-                activity.timestamp > latestGlucoseActivity.getDate()
-            );
-        });
-        newData.forEach((activity) => {
-            this.gamebus
-                .submitGlucoseActivity(
-                    activity.timestamp,
-                    Glucose.MMOL,
-                    +activity.glucose
-                )
-                .then((v) => console.log(v));
+            return activity.timestamp > latestGlucoseActivity.getDate();
         });
 
-        console.log(newData);
-        // .subscribe(
-        //   value => {
-        //     console.log(value)
-        //   },
-        //   (e) => {
-        //     console.log(e.message)
-        //   })
+        const dataLength = newData.length;
+        let msg = '';
+        if (dataLength === 0) {
+            msg = 'No new readings are uploaded';
+        } else {
+            newData.forEach((activity) => {
+                this.gamebus
+                    .submitGlucoseActivity(
+                        activity.timestamp,
+                        Glucose.MMOL,
+                        +activity.glucose
+                    )
+                    .then((v) => console.log(v));
+            });
+            msg = `${await dataLength} new readings have been uploaded`;
+        }
+        this.presentToast(msg);
     }
 
-    shwAtt(strPath) {
-        const varExt = strPath.split('.');
-        // alert(varExt.length);
-        if (varExt[varExt.length - 1] === 'txt') {
-            window.open(strPath);
-        } else {
-            let iframe;
-            iframe = document.getElementById('libreview-frame');
-            if (iframe == null) {
-                iframe = document.createElement('iframe');
-                iframe.id = 'hiddenDownloader';
-                iframe.style.visibility = 'hidden';
-                document.body.appendChild(iframe);
-            }
-            iframe.src = strPath;
-        }
-        return false;
+    async presentToast(message) {
+        const toast = await this.toastController.create({
+            message,
+            duration: 2000,
+        });
+        toast.present();
     }
 }
