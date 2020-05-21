@@ -45,6 +45,8 @@ export class GamebusService {
 
     async getActivityList() {
         const date = new Date();
+        // Set end date to be tomorrow because cut-off time for "today" is 12:00
+        date.setDate(date.getDate() + 1)
         const day = date.getDate().toString().padStart(2, '0');
         const mon = (date.getMonth() + 1).toString().padStart(2, '0');
         const year = date.getFullYear();
@@ -63,10 +65,8 @@ export class GamebusService {
             .pipe(
                 map((list) => {
                     // TODO fix map sometimes doesn't work
-                    console.log(list);
                     return list.map((value) => {
                         let res = Object.assign(new ActivityObject(), value);
-                        console.log(typeof res);
                         return res;
                     })
                 })
@@ -79,7 +79,6 @@ export class GamebusService {
         date: Date,
         properties: Array<{ property: number; value: string }>
     ) {
-        console.log('posting...');
         let body = {
             gameDescriptor: activityID,
             dataProvider: 1,
@@ -119,7 +118,6 @@ export class GamebusService {
         readingUnits: Glucose,
         readingValue: number
     ) {
-        console.log('submitting glucose...');
         return this.postGamebus(Activity.GLUCOSE, date, [
             { property: Glucose.TIME, value: date.toISOString() },
             { property: readingUnits, value: readingValue.toString() },

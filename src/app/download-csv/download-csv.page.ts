@@ -64,18 +64,35 @@ export class DownloadCsvPage implements OnInit {
             .map((line) => line.split(',')) // Split each column
             .filter((line) => line[columns['Record Type']] === '0') // Filter wanted rows
             .map((line) => {
+                const patternDMY = /(\d{1,2})-(\d{1,2})-(\d{4}) (\d{1,2}):(\d{1,2})/;
+                const checkDMY = patternDMY.exec(line[columns['Device Timestamp']]);
+                let timestamp: string;
+                if (checkDMY.length === 0) {
+                    // If date is in YYYY-MM-DD format
+                    // Leave timestamp as is
+                    timestamp = line[columns['Device Timestamp']]
+                } else {
+                    // If date is in DD-MM-YYYY format
+                    const fields = ['day', 'month', 'year', 'hour', 'minute'];
+                    const result: any = {};
+                    checkDMY.forEach( (field, index) => {
+                        result[fields[index - 1]] = field
+                    })
+                    timestamp = `${result.year}-${result.month}-${result.day} ${result.hour}:${result.minute}`
+                }
                 return {
-                    timestamp: new Date(line[columns['Device Timestamp']]),
-                    glucose: line[columns['Historic Glucose mmol/L']],
+                    timestamp: new Date(timestamp),
+                    glucose: line[columns['Historic Glucose mmol/L']]
                 };
             });
 
-        const list = await this.gamebus.getActivityList();
-        const latestGlucoseActivity = list.filter((value) => {
+        const latestGlucoseActivity = (await this.gamebus.getActivityList()).filter((value) => {
             return value.gameDescriptor.id === Activity.GLUCOSE;
         })[0];
 
-        const newData = data.filter((activity) => {
+        // If no glucose activity has ever been submitted,
+        // latestGlucoseActivity is falsy
+        const newData = (!latestGlucoseActivity) ? data : data.filter((activity) => {
             return activity.timestamp > latestGlucoseActivity.getDate();
         });
 
@@ -93,7 +110,7 @@ export class DownloadCsvPage implements OnInit {
                     )
                     .then((v) => console.log(v));
             });
-            msg = `${await dataLength} new readings have been uploaded`;
+            msg = `${dataLength} new readings have been uploaded`;
         }
         this.presentToast(msg);
     }
